@@ -1,0 +1,173 @@
+/* Custom styles for TDI Auto Trading Dashboard */
+
+/* General styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card styling */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+    font-weight: 500;
+}
+
+/* Dashboard stats cards */
+#dashboard-stats .card {
+    transition: transform 0.3s ease;
+}
+
+#dashboard-stats .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Section headers */
+section h4 {
+    margin-bottom: 0;
+}
+
+/* Form styling */
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button styling */
+.btn {
+    border-radius: 0.25rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+}
+
+/* Symbol lists */
+#available-symbols, #selected-symbols {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+}
+
+.list-group-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Performance section */
+#performance-stats .card {
+    transition: transform 0.3s ease;
+}
+
+#performance-stats .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Charts */
+canvas {
+    max-width: 100%;
+}
+
+/* Trade history table */
+.table {
+    font-size: 0.9rem;
+}
+
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* Footer */
+footer {
+    margin-top: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    h2.card-text {
+        font-size: 1.5rem;
+    }
+}
+
+/* Current position styling */
+.position-badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.position-long {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.position-short {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.position-none {
+    background-color: #e2e3e5;
+    color: #41464b;
+}
+
+/* Loading indicator */
+.loading {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0.25rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #0d6efd;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

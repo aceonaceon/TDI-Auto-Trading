@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDI Auto Trading Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>TDI Auto Trading
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#configuration">Configuration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#trading-pairs">Trading Pairs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#performance">Performance</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="mb-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="dashboard-stats">
+                                <!-- Dashboard stats will be loaded here -->
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Active Symbols</h5>
+                                            <h2 class="card-text" id="active-symbols-count">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Open Positions</h5>
+                                            <h2 class="card-text" id="open-positions-count">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Trades</h5>
+                                            <h2 class="card-text" id="total-trades-count">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Win Rate</h5>
+                                            <h2 class="card-text" id="win-rate">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Section -->
+        <section id="configuration" class="mb-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-cogs me-2"></i>Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="config-form">
+                                <div class="row">
+                                    <!-- API Configuration -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">API Configuration</h5>
+                                        <div class="mb-3">
+                                            <label for="BINANCE_API_KEY" class="form-label">Binance API Key</label>
+                                            <input type="text" class="form-control" id="BINANCE_API_KEY" name="BINANCE_API_KEY">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="BINANCE_API_SECRET" class="form-label">Binance API Secret</label>
+                                            <input type="password" class="form-control" id="BINANCE_API_SECRET" name="BINANCE_API_SECRET">
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="USE_TESTNET" name="USE_TESTNET" value="True">
+                                            <label class="form-check-label" for="USE_TESTNET">Use Testnet</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Trading Parameters -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">Trading Parameters</h5>
+                                        <div class="mb-3">
+                                            <label for="BASE_ORDER_QUANTITY" class="form-label">Base Order Quantity</label>
+                                            <input type="number" class="form-control" id="BASE_ORDER_QUANTITY" name="BASE_ORDER_QUANTITY" step="0.001">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="MAX_LEVERAGE" class="form-label">Max Leverage</label>
+                                            <input type="number" class="form-control" id="MAX_LEVERAGE" name="MAX_LEVERAGE" min="1" max="125">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="ACCOUNT_RISK_PER_TRADE" class="form-label">Account Risk Per Trade (%)</label>
+                                            <input type="number" class="form-control" id="ACCOUNT_RISK_PER_TRADE" name="ACCOUNT_RISK_PER_TRADE" step="0.01" min="0.01" max="10">
+                                        </div>
+                                    </div>
+
+                                    <!-- TDI Parameters -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">TDI Parameters</h5>
+                                        <div class="mb-3">
+                                            <label for="TDI_RSI_LENGTH" class="form-label">RSI Length</label>
+                                            <input type="number" class="form-control" id="TDI_RSI_LENGTH" name="TDI_RSI_LENGTH" min="2" max="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="TDI_FAST_MA" class="form-label">Fast MA</label>
+                                            <input type="number" class="form-control" id="TDI_FAST_MA" name="TDI_FAST_MA" min="1" max="20">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="TDI_SLOW_MA" class="form-label">Slow MA</label>
+                                            <input type="number" class="form-control" id="TDI_SLOW_MA" name="TDI_SLOW_MA" min="2" max="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="TDI_VOLATILITY_BAND_LENGTH" class="form-label">Volatility Band Length</label>
+                                            <input type="number" class="form-control" id="TDI_VOLATILITY_BAND_LENGTH" name="TDI_VOLATILITY_BAND_LENGTH" min="5" max="100">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="TDI_STD_DEV_MULTIPLIER" class="form-label">Standard Deviation Multiplier</label>
+                                            <input type="number" class="form-control" id="TDI_STD_DEV_MULTIPLIER" name="TDI_STD_DEV_MULTIPLIER" step="0.1" min="0.5" max="5">
+                                        </div>
+                                    </div>
+
+                                    <!-- Timeframes -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">Timeframes</h5>
+                                        <div class="mb-3">
+                                            <label for="MACRO_TIMEFRAME" class="form-label">Macro Timeframe</label>
+                                            <select class="form-select" id="MACRO_TIMEFRAME" name="MACRO_TIMEFRAME">
+                                                <option value="1d">1 Day</option>
+                                                <option value="3d">3 Days</option>
+                                                <option value="1w">1 Week</option>
+                                                <option value="1M">1 Month</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="STRATEGY_TIMEFRAME" class="form-label">Strategy Timeframe</label>
+                                            <select class="form-select" id="STRATEGY_TIMEFRAME" name="STRATEGY_TIMEFRAME">
+                                                <option value="1h">1 Hour</option>
+                                                <option value="4h">4 Hours</option>
+                                                <option value="6h">6 Hours</option>
+                                                <option value="12h">12 Hours</option>
+                                                <option value="1d">1 Day</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="EXECUTION_TIMEFRAME" class="form-label">Execution Timeframe</label>
+                                            <select class="form-select" id="EXECUTION_TIMEFRAME" name="EXECUTION_TIMEFRAME">
+                                                <option value="5m">5 Minutes</option>
+                                                <option value="15m">15 Minutes</option>
+                                                <option value="30m">30 Minutes</option>
+                                                <option value="1h">1 Hour</option>
+                                                <option value="4h">4 Hours</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="MICRO_TIMEFRAME" class="form-label">Micro Timeframe</label>
+                                            <select class="form-select" id="MICRO_TIMEFRAME" name="MICRO_TIMEFRAME">
+                                                <option value="1m">1 Minute</option>
+                                                <option value="3m">3 Minutes</option>
+                                                <option value="5m">5 Minutes</option>
+                                                <option value="15m">15 Minutes</option>
+                                                <option value="30m">30 Minutes</option>
+                                                <option value="1h">1 Hour</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Risk Management -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">Risk Management</h5>
+                                        <div class="mb-3">
+                                            <label for="MAX_DRAWDOWN" class="form-label">Max Drawdown (%)</label>
+                                            <input type="number" class="form-control" id="MAX_DRAWDOWN" name="MAX_DRAWDOWN" step="0.01" min="0.05" max="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="TRAILING_STOP_ACTIVATION" class="form-label">Trailing Stop Activation (%)</label>
+                                            <input type="number" class="form-control" id="TRAILING_STOP_ACTIVATION" name="TRAILING_STOP_ACTIVATION" step="0.01" min="0.01" max="20">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="PARTIAL_TAKE_PROFIT" class="form-label">Partial Take Profit (%)</label>
+                                            <input type="number" class="form-control" id="PARTIAL_TAKE_PROFIT" name="PARTIAL_TAKE_PROFIT" step="0.01" min="0.01" max="20">
+                                        </div>
+                                    </div>
+
+                                    <!-- Advanced Features -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">Advanced Features</h5>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="USE_ML_FILTER" name="USE_ML_FILTER" value="True">
+                                            <label class="form-check-label" for="USE_ML_FILTER">Use ML Filter</label>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="USE_SENTIMENT_ANALYSIS" name="USE_SENTIMENT_ANALYSIS" value="True">
+                                            <label class="form-check-label" for="USE_SENTIMENT_ANALYSIS">Use Sentiment Analysis</label>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="USE_CROSS_MARKET_CORRELATION" name="USE_CROSS_MARKET_CORRELATION" value="True">
+                                            <label class="form-check-label" for="USE_CROSS_MARKET_CORRELATION">Use Cross-Market Correlation</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Logging and Debugging -->
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="border-bottom pb-2">Logging and Debugging</h5>
+                                        <div class="mb-3">
+                                            <label for="LOG_LEVEL" class="form-label">Log Level</label>
+                                            <select class="form-select" id="LOG_LEVEL" name="LOG_LEVEL">
+                                                <option value="DEBUG">DEBUG</option>
+                                                <option value="INFO">INFO</option>
+                                                <option value="WARNING">WARNING</option>
+                                                <option value="ERROR">ERROR</option>
+                                                <option value="CRITICAL">CRITICAL</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="BACKTEST_MODE" name="BACKTEST_MODE" value="True">
+                                            <label class="form-check-label" for="BACKTEST_MODE">Backtest Mode</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-save me-2"></i>Save Configuration
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trading Pairs Section -->
+        <section id="trading-pairs" class="mb-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-exchange-alt me-2"></i>Trading Pairs</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="symbol-search" placeholder="Search symbols...">
+                                        <button class="btn btn-outline-secondary" type="button" id="refresh-symbols">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-success" id="save-symbols">
+                                        <i class="fas fa-save me-2"></i>Save Selected Pairs
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header bg-secondary text-white">
+                                            Available Symbols
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="list-group" id="available-symbols" style="height: 400px; overflow-y: auto;">
+                                                <!-- Available symbols will be loaded here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">
+                                            Selected Symbols
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="list-group" id="selected-symbols" style="height: 400px; overflow-y: auto;">
+                                                <!-- Selected symbols will be loaded here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Section -->
+        <section id="performance" class="mb-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-chart-line me-2"></i>Performance</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <select class="form-select" id="performance-symbol">
+                                        <option value="">Select a symbol...</option>
+                                        <!-- Trading symbols will be loaded here -->
+                                    </select>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-primary" id="refresh-performance">
+                                        <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                                    </button>
+                                    <button class="btn btn-success" id="run-strategy">
+                                        <i class="fas fa-play me-2"></i>Run Strategy Once
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Performance Stats -->
+                            <div class="row mb-4" id="performance-stats">
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Trades</h5>
+                                            <h2 class="card-text" id="symbol-total-trades">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Win Rate</h5>
+                                            <h2 class="card-text" id="symbol-win-rate">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Avg Profit</h5>
+                                            <h2 class="card-text" id="symbol-avg-profit">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Max Drawdown</h5>
+                                            <h2 class="card-text" id="symbol-max-drawdown">-</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Current Position -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header bg-secondary text-white">
+                                            Current Position
+                                        </div>
+                                        <div class="card-body" id="current-position">
+                                            <p class="text-center text-muted">Select a symbol to view current position</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Price Chart -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header bg-secondary text-white">
+                                            Price Chart
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="price-chart" height="300"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- TDI Chart -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header bg-secondary text-white">
+                                            TDI Indicator
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="tdi-chart" height="300"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Trade History -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header bg-secondary text-white">
+                                            Trade History
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Entry Time</th>
+                                                            <th>Exit Time</th>
+                                                            <th>Direction</th>
+                                                            <th>Entry Price</th>
+                                                            <th>Exit Price</th>
+                                                            <th>Position Size</th>
+                                                            <th>P&L</th>
+                                                            <th>Exit Reason</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="trade-history">
+                                                        <!-- Trade history will be loaded here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">TDI Auto Trading System &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

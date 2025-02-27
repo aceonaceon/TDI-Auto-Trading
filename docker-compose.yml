@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  tdi-trading:
+    build: .
+    container_name: tdi-auto-trading
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Taipei
+    # If you want to run in backtest mode, uncomment the following line
+    # command: python main.py --backtest --start-date 2023-01-01 --end-date 2023-12-31
+  
+  tdi-web:
+    build: .
+    container_name: tdi-web-interface
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Taipei
+    command: python src/web/run.py
