@@ -18,7 +18,7 @@ An automated cryptocurrency trading system based on the Traders Dynamic Index (T
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/TDI-Auto-Trading.git
+git clone https://github.com/aceonaceon/TDI-Auto-Trading.git
 cd TDI-Auto-Trading
 ```
 
@@ -70,7 +70,7 @@ cp .env.template .env
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/TDI-Auto-Trading.git
+git clone https://github.com/aceonaceon/TDI-Auto-Trading.git
 cd TDI-Auto-Trading
 ```
 
